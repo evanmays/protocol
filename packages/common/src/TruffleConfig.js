@@ -7,7 +7,6 @@
 const path = require("path");
 
 const HDWalletProvider = require("@truffle/hdwallet-provider");
-const LedgerWalletProvider = require("@umaprotocol/truffle-ledger-provider");
 const { GckmsConfig } = require("./gckms/GckmsConfig.js");
 const { ManagedSecretProvider } = require("./gckms/ManagedSecretProvider.js");
 const { PublicNetworks } = require("./PublicNetworks.js");
@@ -106,29 +105,6 @@ function addPublicNetwork(networks, name, networkId) {
   const ledgerOptions = {
     ...legacyLedgerOptions,
     path: "44'/60'/0'/0/0"
-  };
-
-  // Normal ledger wallet network.
-  networks[name + "_ledger"] = {
-    ...options,
-    provider: function(provider = nodeUrl) {
-      if (!singletonProvider) {
-        singletonProvider = new LedgerWalletProvider(ledgerOptions, provider);
-      }
-      return singletonProvider;
-    }
-  };
-
-  // Legacy ledger wallet network.
-  // Note: the default derivation path matches the "legacy" ledger account in Ledger Live.
-  networks[name + "_ledger_legacy"] = {
-    ...options,
-    provider: function(provider = nodeUrl) {
-      if (!singletonProvider) {
-        singletonProvider = new LedgerWalletProvider(legacyLedgerOptions, provider);
-      }
-      return singletonProvider;
-    }
   };
 }
 
